@@ -26,12 +26,12 @@ class Ant {
         this.img.src = `./images/sprites/${this.imgCounter}.png`;
 
         setInterval(() => {
-            if (this.imgCounter === 62)
+            if (this.imgCounter === 7)
                 this.imgCounter = 1;
             else
                 this.imgCounter++;
             this.img.src = `./images/sprites/${this.imgCounter}.png`;
-        }, this.speed * 10);
+        }, this.speed * 20);
     }
 
     draw = () => {
