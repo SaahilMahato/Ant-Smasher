@@ -25,19 +25,21 @@ for (let i=0; i<antCount; i++) {
     dx = possibleDirections[getRandomIntInclusive(0, possibleDirections.length - 1)];
     dy = possibleDirections[getRandomIntInclusive(0, possibleDirections.length - 1)];
     speed = getRandomIntInclusive(minSpeed, maxSpeed);
-
     ants.push(new Ant(x, y, length, dx, dy, speed, ctx));
 }
 
+// function to remove dead ant
 const removeAnt = (deadAnt) => {
     let remainingAnts = ants.filter((ants, ant) => ant !== deadAnt);
     ants = remainingAnts;
 }
 
+// change cursor on canvas
 canvas.addEventListener('mouseover', () => {
     canvas.style.cursor = 'pointer';
 });
 
+// check collision of clicked point and ant
 canvas.addEventListener('click', (event) => {
     let x = event.x;
     let y = event.y;

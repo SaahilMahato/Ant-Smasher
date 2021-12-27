@@ -5,7 +5,7 @@
  * @param {number} dx - the x-direction of the ball
  * @param {number} dy - the y-direction of the ball
  * @param {number} speed - the speed of the ball
- * @param {CanvasRenderingContext2D} ctx - the context where the ant
+ * @param {CanvasRenderingContext2D} ctx - the context where the ant should be drawn
  */
 
 class Ant {
@@ -28,14 +28,14 @@ class Ant {
         this.ctx.translate(this.x, this.y); // set point of rotation to center
         this.ctx.rotate(Math.PI / 180 * (this.angle + 90)); // rotate
         this.ctx.translate(-this.x, -this.y); // restore point of rotation
-        this.ctx.drawImage(this.img, this.x, this.y, this.length, this.length);
+        this.ctx.drawImage(this.img, this.x, this.y, this.length, this.length); // draw image
         this.ctx.setTransform(1, 0, 0, 1, 0, 0); // restore transformation matrix
     }
 
     move = () => {
         this.x += this.vx;
         this.y += this.vy;
-        let radians = Math.atan2(this.vy, this.vx);
+        let radians = Math.atan2(this.vy, this.vx); // formula to calculate angle in radians
         this.angle = 180 * radians / Math.PI; // convert to degrees
     }
 
