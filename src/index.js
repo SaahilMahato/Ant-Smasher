@@ -40,14 +40,15 @@ canvas.addEventListener('mouseover', () => {
 });
 
 // check collision of clicked point and ant
-canvas.addEventListener('click', (event) => {
-    let x = event.x;
-    let y = event.y;
+canvas.addEventListener('click', event => {
+    let x = event.offsetX;
+    let y = event.offsetY;
 
     for (let i = 0; i < ants.length; i++) {
-        if (x >= ants[i].x &&         // right of the left edge AND
+        // check if the point falls within a ant's rectangle hitbox
+        if (x >= ants[i].x - ants[i].length &&         // right of the left edge (modified logic to optimize hitbox) AND
             x <= ants[i].x + ants[i].length &&    // left of the right edge AND
-            y >= ants[i].y &&         // below the top enge AND
+            y >= ants[i].y - ants[i].length &&         // below the top enge (modified logic to optimize hitbox) AND
             y <= ants[i].y + ants[i].length) // above the bottom edge
             removeAnt(i);
     }
@@ -57,16 +58,14 @@ canvas.addEventListener('click', (event) => {
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i=0; i<ants.length; i++) {
-        ants[i].draw(ctx);
+        ants[i].move();
+        ants[i].draw();
         for (let j=i+1; j<ants.length; j++) {
             if (ants[i].checkAntCollision(ants[j])) {
                 ants[i].resolveAntCollision(ants[j]);
-                ants[i].move(ctx);
-                ants[j].move(ctx);
             }
         }
-        ants[i].resolveBoxCollision(ctx);
-        ants[i].move(ctx);
+        ants[i].resolveBoxCollision();
     }
     requestAnimationFrame(gameLoop);
 }
