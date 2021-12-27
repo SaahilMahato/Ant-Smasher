@@ -19,9 +19,19 @@ class Ant {
         this.vy = dy * this.speed;
         this.mass = this.length; // suppose mass is equal to length. looks realistic
         this.restitution = 0.99; // higher value = high energy retain after collision
-        this.img = new Image();
-        this.img.src = './images/ant.png';
         this.angle = 0;
+
+        this.img = new Image();
+        this.imgCounter = 1;
+        this.img.src = `./images/sprites/${this.imgCounter}.png`;
+
+        setInterval(() => {
+            if (this.imgCounter === 62)
+                this.imgCounter = 1;
+            else
+                this.imgCounter++;
+            this.img.src = `./images/sprites/${this.imgCounter}.png`;
+        }, this.speed * 10);
     }
 
     draw = () => {
@@ -69,10 +79,10 @@ class Ant {
 
     checkAntCollision = (otherAnt) => {
         // rectangle collision
-        return (this.x < otherAnt.x + otherAnt.length &&
-                this.x + this.length > otherAnt.x &&
-                this.y < otherAnt.y + otherAnt.length &&
-                this.y + this.length > otherAnt.y);
+        return !(otherAnt.x > this.length + this.x ||
+            this.x > otherAnt.length + otherAnt.x ||
+            otherAnt.y > this.length + this.y ||
+            this.y > otherAnt.length + otherAnt.y);
     }
 
     resolveAntCollision = (otherAnt) => {
