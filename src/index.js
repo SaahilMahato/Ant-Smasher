@@ -38,15 +38,15 @@ canvas.addEventListener('mouseover', () => {
     canvas.style.cursor = 'pointer';
 });
 
-canvas.addEventListener('mousedown', (event) => {
+canvas.addEventListener('click', (event) => {
     let x = event.x;
     let y = event.y;
-  
+
     for (let i = 0; i < ants.length; i++) {
         if (x >= ants[i].x &&         // right of the left edge AND
             x <= ants[i].x + ants[i].length &&    // left of the right edge AND
-            y >= ants[i].y &&         // below the top AND
-            y <= ants[i].y + ants[i].length)
+            y >= ants[i].y &&         // below the top enge AND
+            y <= ants[i].y + ants[i].length) // above the bottom edge
             removeAnt(i);
     }
 });
@@ -57,8 +57,8 @@ const gameLoop = () => {
     for(let i=0; i<ants.length; i++) {
         ants[i].draw(ctx);
         for (let j=i+1; j<ants.length; j++) {
-            if (ants[i].checkBallCollision(ants[j])) {
-                ants[i].resolveCollision(ants[j]);
+            if (ants[i].checkAntCollision(ants[j])) {
+                ants[i].resolveAntCollision(ants[j]);
                 ants[i].move(ctx);
                 ants[j].move(ctx);
             }

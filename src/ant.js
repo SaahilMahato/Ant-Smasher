@@ -5,6 +5,7 @@
  * @param {number} dx - the x-direction of the ball
  * @param {number} dy - the y-direction of the ball
  * @param {number} speed - the speed of the ball
+ * @param {CanvasRenderingContext2D} ctx - the context where the ant
  */
 
 class Ant {
@@ -28,14 +29,14 @@ class Ant {
         this.ctx.rotate(Math.PI / 180 * (this.angle + 90)); // rotate
         this.ctx.translate(-this.x, -this.y); // restore point of rotation
         this.ctx.drawImage(this.img, this.x, this.y, this.length, this.length);
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0); // restore transformation matrix
     }
 
     move = () => {
         this.x += this.vx;
         this.y += this.vy;
         let radians = Math.atan2(this.vy, this.vx);
-        this.angle = 180 * radians / Math.PI;
+        this.angle = 180 * radians / Math.PI; // convert to degrees
     }
 
     resolveBoxCollision = () => {
@@ -66,33 +67,28 @@ class Ant {
         }
     }
 
-    checkBallCollision = (otherBall) => {
-        /*
-            sqrt() was not used because it is a costly operation
-            instead the length is squared and compared
-        */
-
-        let xDist = this.x - otherBall.x;
-        let yDist = this.y - otherBall.y;
-        let distanceSquared = xDist * xDist + yDist * yDist;
-        let lengthSquared = (this.length + otherBall.length) * (this.length + otherBall.length);
-        return distanceSquared <= lengthSquared;
+    checkAntCollision = (otherAnt) => {
+        // rectangle collision
+        return (this.x < otherAnt.x + otherAnt.length &&
+                this.x + this.length > otherAnt.x &&
+                this.y < otherAnt.y + otherAnt.length &&
+                this.y + this.length > otherAnt.y);
     }
 
-    resolveCollision = (otherBall) => {
+    resolveAntCollision = (otherAnt) => {
         // use vector physics to calculate velocity. 
         // restitution is not physically accurate but it looks a bit realistic
 
-        let vCollision = {x: otherBall.x - this.x, y: otherBall.y - this.y}; // vector of the direction of collision
-        let distance = Math.sqrt((otherBall.x - this.x)*(otherBall.x - this.x) + (otherBall.y - this.y)*(otherBall.y - this.y)); // distance between balls. Need to calculate normal vector
+        let vCollision = {x: otherAnt.x - this.x, y: otherAnt.y - this.y}; // vector of the direction of collision
+        let distance = Math.sqrt((otherAnt.x - this.x)*(otherAnt.x - this.x) + (otherAnt.y - this.y)*(otherAnt.y - this.y)); // distance between balls. Need to calculate normal vector
         let vCollisionNorm = {x: vCollision.x / distance, y: vCollision.y / distance}; // noraml vector. need to calculate relative velocity
-        let vRelativeVelocity = {x: this.vx - otherBall.vx, y: this.vy - otherBall.vy}; // relative velocity. differece between the velocities
+        let vRelativeVelocity = {x: this.vx - otherAnt.vx, y: this.vy - otherAnt.vy}; // relative velocity. differece between the velocities
         let speed = vRelativeVelocity.x * vCollisionNorm.x + vRelativeVelocity.y * vCollisionNorm.y; // calucate speed. vector * normal gives scalar quantity
         if (speed < 0) return; // if speed is less than 0 dont change otherwise it overlaps
-        let impulse = 2 * speed / (this.mass + otherBall.mass); // impulse is the force that produces change in momemtum
-        this.vx -= ((impulse * otherBall.mass * vCollisionNorm.x) * this.restitution); // multpiply collision vector by impulse of the otherball
-        this.vy -= ((impulse * otherBall.mass * vCollisionNorm.y) * this.restitution); // multpiply collision vector by impulse of the otherball
-        otherBall.vx += ((impulse * this.mass * vCollisionNorm.x) * this.restitution); // multpiply collision vector by impulse of the otherball
-        otherBall.vy += ((impulse * this.mass * vCollisionNorm.y) * this.restitution); // multpiply collision vector by impulse of the otherball
+        let impulse = 2 * speed / (this.mass + otherAnt.mass); // impulse is the force that produces change in momemtum
+        this.vx -= ((impulse * otherAnt.mass * vCollisionNorm.x) * this.restitution); // multpiply collision vector by impulse of the otherAnt
+        this.vy -= ((impulse * otherAnt.mass * vCollisionNorm.y) * this.restitution); // multpiply collision vector by impulse of the otherAnt
+        otherAnt.vx += ((impulse * this.mass * vCollisionNorm.x) * this.restitution); // multpiply collision vector by impulse of the otherAnt
+        otherAnt.vy += ((impulse * this.mass * vCollisionNorm.y) * this.restitution); // multpiply collision vector by impulse of the otherAnt
     }
 }
