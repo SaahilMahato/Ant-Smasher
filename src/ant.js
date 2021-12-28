@@ -20,17 +20,40 @@ class Ant {
         this.mass = this.length; // suppose mass is equal to length. looks realistic
         this.restitution = 0.99; // higher value = high energy retain after collision
         this.angle = 0;
+        
+        this.img1 = new Image();
+        this.img1.src = './images/sprites/1.png'
+        this.img2 = new Image();
+        this.img2.src = './images/sprites/2.png'
+        this.img3 = new Image();
+        this.img3.src = './images/sprites/3.png'
+        this.img4 = new Image();
+        this.img4.src = './images/sprites/4.png'
+        this.img5 = new Image();
+        this.img5.src = './images/sprites/5.png'
+        this.img6 = new Image();
+        this.img6.src = './images/sprites/6.png'
+        this.img7 = new Image();
+        this.img7.src = './images/sprites/7.png'
 
-        this.img = new Image();
-        this.imgCounter = 1;
-        this.img.src = `./images/sprites/${this.imgCounter}.png`;
+        this.images = [
+            this.img1,
+            this.img2,
+            this.img3,
+            this.img4,
+            this.img5,
+            this.img6,
+            this.img7
+        ]
+        this.counter = 0;
 
+        this.img = this.images[0];
         setInterval(() => {
-            if (this.imgCounter === 7)
-                this.imgCounter = 1;
+            if (this.counter === 6)
+                this.counter = 1;
             else
-                this.imgCounter++;
-            this.img.src = `./images/sprites/${this.imgCounter}.png`;
+                this.counter++;
+            this.img = this.images[this.counter];
         }, this.speed * 20);
     }
 
