@@ -70,4 +70,4 @@ const gameLoop = () => {
     requestAnimationFrame(gameLoop);
 }
 
-window.onload(gameLoop()); // call game loop after all images load
+gameLoop(); // call game loop
